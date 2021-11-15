@@ -4,11 +4,31 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JavaScript inlämning 1</title>
+    <title>JS Project 1 - Guess the student</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
+    <main>
+        <h1>Guess the student!</h1>
+        <p>For each shown picture, guess wich student it is!</p>
+        <button id="btn-new-game">Let's Start!</button>
+
+        <div id ="game-container">
+            <img src="img/blueberry-small.jpg" alt="Picture of a student" class="round-img">
+            <h2 id="round-title">Who is this?</h2>
+            <ul id="round-list">
+                <li>Name1</li>
+                <li>Name2</li>
+                <li>Name3</li>
+                <li>Name4</li>
+            </ul>    
+            <button id="btn-guess">Next</button>
+        </div>
+
+        <div id="game-result">
+
+        </div>
+    </main>
     <script src="script.js"></script>
 </body>
 </html>
