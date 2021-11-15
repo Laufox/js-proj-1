@@ -36,8 +36,13 @@ main {
     padding: 3vh 3vw;
 }
 
-#game-container {
+.game-container {
     margin: 3vh 0;
+    display: none;
+}
+
+.show {
+    display: block;
 }
 
 @media screen and (min-width: 600px) {
