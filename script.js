@@ -3,7 +3,7 @@ const btnNewGameEl = document.querySelector('#btn-new-game');
 const roundTitleEl = document.querySelector('#round-title');
 const roundImgEl = document.querySelector('.round-img');
 const roundListEl = document.querySelector('#round-list');
-// const btnGuessEl = document.querySelector('#btn-guess');
+const btnAbortEl = document.querySelector('#btn-abort');
 const gameContainerEl = document.querySelector('.game-container');
 const gameResultEl = document.querySelector('#game-result');
 
@@ -168,10 +168,12 @@ const students = [
 ];
 
 let secretStudent;
+let currentGameStudents = [];
 let currentRoundStudents = [];
-let currentRound;
-let score;
+let currentRound = 0;
+let score = 0;
 
+// Function that shuffles elements of an array by random
 const arrayShuffle = function(arr) {
      for (let i = arr.length -1; i > 0; i--) {
        let j = Math.floor(Math.random() * (i + 1));
@@ -188,8 +190,11 @@ const getRandomStudent = function() {
 
 // Function to reset data and begin a new game
 const newGame = function() {
+	currentGameStudents = [...students];
+	arrayShuffle(currentGameStudents);
     currentRound = 0;
     score = 0;
+	gameResultEl.innerHTML = '';
 	gameContainerEl.classList.remove('hide');
 }
 
@@ -200,16 +205,16 @@ const newRound = function() {
     roundListEl.innerHTML = '';
 
     // Pick a student at random, and push it to the array for the current round
-    secretStudent = getRandomStudent();
-    console.log(secretStudent.name);
+    secretStudent = currentGameStudents.pop();
+    console.log("Chosen: ", secretStudent.name);
     currentRoundStudents.push(secretStudent);
     
     // Add students image to DOM
     roundImgEl.setAttribute('src', secretStudent.image);
 
     // Update the DOM with info about what round the user is on
-    currentRound++;
-    roundTitleEl.innerText = `Round ${currentRound} - Who is this?`;
+    
+    roundTitleEl.innerText = `Round ${currentRound + 1} - Who is this?`;
 
     // Fill in the rest of the students used for the current round
     while (currentRoundStudents.length < 4) {
@@ -223,7 +228,6 @@ const newRound = function() {
         }
     }
 
-    //console.log("Students this round: ", currentRoundStudents);
     // Randomise order of selected students
     arrayShuffle(currentRoundStudents);
 
@@ -232,19 +236,21 @@ const newRound = function() {
         roundListEl.innerHTML += `<li>${student.name}</li>`;
     } );
     
-    
+}
+
+const renderResult = function() {
+	gameResultEl.innerHTML = `<p>Game Finished. You got ${score} out of ${currentRound} points</p>`;
+	gameContainerEl.classList.add('hide');
 }
 
 // Event listener for the button to start new game
 btnNewGameEl.addEventListener ('click', () => {
-    // Begin a new game
-    newGame();
+	
+	// Begin a new game
+	newGame();
 
-    // Begin a new round
-    newRound();
-
-    // Display the game interface to the user
-    //gameContainerEl.classList.add('show');
+	// Begin a new round
+	newRound();
     
 });
 
@@ -254,6 +260,8 @@ roundListEl.addEventListener('click', (e) => {
     // If the clicked target is an Li - element, start a new round
     if (e.target.tagName === 'LI') {
         console.log("You choose: ", e.target.innerText);
+		currentRound++;
+		// If the clicked Li corresponds with the image, increase the score
         if (e.target.innerText === secretStudent.name) {
             score++;
             console.log("Correct - ", score);
@@ -262,16 +270,21 @@ roundListEl.addEventListener('click', (e) => {
             console.log("Wrong");
         }
 
+		// If the current round number is the same as lenth of student array, finished the game
         if (currentRound === students.length) {
             console.log(`Game finished. You got ${score} out of ${currentRound} points`);
-			gameResultEl.innerHTML = `<p>Game Finished. You got ${score} out of ${currentRound} points</p>`;
-			gameContainerEl.classList.add('hide');
+			renderResult();
+			
         } else {
             newRound();
         }
         
     }
     
+});
+
+btnAbortEl.addEventListener('click', () => {
+	renderResult();
 });
 
 // Begin a new game
