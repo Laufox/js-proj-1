@@ -168,10 +168,12 @@ const students = [
 ];
 
 let secretStudent;
+let currentGameResult = [];
 let currentGameStudents = [];
 let currentRoundStudents = [];
 let currentRound = 0;
 let score = 0;
+let previousGameScore = -1;
 
 // Function that shuffles elements of an array by random
 const arrayShuffle = function(arr) {
@@ -194,6 +196,7 @@ const newGame = function() {
 	arrayShuffle(currentGameStudents);
     currentRound = 0;
     score = 0;
+	currentGameResult = [];
 	gameResultEl.innerHTML = '';
 	gameContainerEl.classList.remove('hide');
 }
@@ -239,7 +242,29 @@ const newRound = function() {
 }
 
 const renderResult = function() {
+	currentGameResult = currentGameResult.filter( (round) => {
+		return round.userGuess !== round.name;
+	});
+
+	console.log(currentGameResult);
+	currentGameResult = currentGameResult.map( (round) => {
+		return `<img src="${round.image}"><p>You guessed: ${round.userGuess} but the correct name is ${round.name}</p>`
+	} );
+
 	gameResultEl.innerHTML = `<p>Game Finished. You got ${score} out of ${currentRound} points</p>`;
+
+	if (previousGameScore >= 0) {
+		if (previousGameScore > score) {
+			gameResultEl.innerHTML += `<p>You did worse(${score} points) than your previous(${previousGameScore} points) game</p>`;
+		}else {
+			gameResultEl.innerHTML += `<p>You did better(${score} points) than your previous(${previousGameScore} points) game</p>`;
+		}
+	}
+	previousGameScore = score;
+
+	currentGameResult.forEach ( (item) => {
+		gameResultEl.innerHTML += item;
+	} );
 	gameContainerEl.classList.add('hide');
 }
 
@@ -261,6 +286,13 @@ roundListEl.addEventListener('click', (e) => {
     if (e.target.tagName === 'LI') {
         console.log("You choose: ", e.target.innerText);
 		currentRound++;
+		currentGameResult.push(
+		{
+			image: secretStudent.image,
+			name: secretStudent.name,
+			userGuess: e.target.innerText
+		});
+		//console.log(currentGameResult[currentGameResult.length-1]);
 		// If the clicked Li corresponds with the image, increase the score
         if (e.target.innerText === secretStudent.name) {
             score++;
@@ -272,6 +304,7 @@ roundListEl.addEventListener('click', (e) => {
 
 		// If the current round number is the same as lenth of student array, finished the game
         if (currentRound === students.length) {
+			
             console.log(`Game finished. You got ${score} out of ${currentRound} points`);
 			renderResult();
 			
