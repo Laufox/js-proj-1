@@ -3,9 +3,11 @@ const btnNewGameEl = document.querySelector('#btn-new-game');
 const roundTitleEl = document.querySelector('#round-title');
 const roundImgEl = document.querySelector('.round-img');
 const roundListEl = document.querySelector('#round-list');
-const btnAbortEl = document.querySelector('#btn-abort');
 const gameContainerEl = document.querySelector('.game-container');
-const gameResultEl = document.querySelector('#game-result');
+const gameResultEl = document.querySelector('.game-result');
+const btnShowWrongs = document.querySelector('#btn-show-wrongs');
+const gameResultContainerEl = document.querySelector('.game-result-container');
+const wrongGuessesEl = document.querySelector('.wrong-guesses');
 
 // List of students available for the game, including a path file for their image
 const students = [
@@ -198,7 +200,9 @@ const newGame = function() {
     score = 0;
 	currentGameResult = [];
 	gameResultEl.innerHTML = '';
+	wrongGuessesEl.innerHTML = '';
 	gameContainerEl.classList.remove('hide');
+	gameResultContainerEl.classList.remove('show');
 }
 
 // Function to update data and DOM each round
@@ -256,15 +260,16 @@ const renderResult = function() {
 	if (previousGameScore >= 0) {
 		if (previousGameScore > score) {
 			gameResultEl.innerHTML += `<p>You did worse(${score} points) than your previous(${previousGameScore} points) game</p>`;
-		}else {
+		}else if (previousGameScore < score){
 			gameResultEl.innerHTML += `<p>You did better(${score} points) than your previous(${previousGameScore} points) game</p>`;
 		}
 	}
 	previousGameScore = score;
 
 	currentGameResult.forEach ( (item) => {
-		gameResultEl.innerHTML += item;
+		wrongGuessesEl.innerHTML += item;
 	} );
+	gameResultContainerEl.classList.add('show');
 	gameContainerEl.classList.add('hide');
 }
 
@@ -280,7 +285,7 @@ btnNewGameEl.addEventListener ('click', () => {
 });
 
 // Event listener for the UL
-roundListEl.addEventListener('click', (e) => {
+gameContainerEl.addEventListener('click', (e) => {
     
     // If the clicked target is an Li - element, start a new round
     if (e.target.tagName === 'LI') {
@@ -312,12 +317,14 @@ roundListEl.addEventListener('click', (e) => {
             newRound();
         }
         
-    }
+    } else if (e.target.tagName === 'BUTTON') {
+		renderResult();
+	}
     
 });
 
-btnAbortEl.addEventListener('click', () => {
-	renderResult();
+btnShowWrongs.addEventListener('click', () => {
+	wrongGuessesEl.classList.toggle('show');
 });
 
 // Begin a new game
