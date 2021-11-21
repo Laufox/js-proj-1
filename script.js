@@ -1,5 +1,4 @@
 // Finding the DOM elements needed
-const btnNewGameEl = document.querySelector('#btn-new-game');
 const roundTitleEl = document.querySelector('#round-title');
 const roundImgEl = document.querySelector('.round-img');
 const roundListEl = document.querySelector('#round-list');
@@ -8,6 +7,7 @@ const gameResultEl = document.querySelector('.game-result');
 const btnShowWrongs = document.querySelector('#btn-show-wrongs');
 const gameResultContainerEl = document.querySelector('.game-result-container');
 const wrongGuessesEl = document.querySelector('.wrong-guesses');
+const btnResetEL = document.querySelector('.btn-abort');
 
 // List of students available for the game, including a path file for their image
 const students = [
@@ -213,21 +213,18 @@ const newRound = function() {
 
     // Pick a student at random, and push it to the array for the current round
     secretStudent = currentGameStudents.pop();
-    console.log("Chosen: ", secretStudent.name);
     currentRoundStudents.push(secretStudent);
     
     // Add students image to DOM
     roundImgEl.setAttribute('src', secretStudent.image);
 
-    // Update the DOM with info about what round the user is on
-    
+    // Update the DOM with info about what round the user is on 
     roundTitleEl.innerText = `Round ${currentRound + 1} - Who is this?`;
 
     // Fill in the rest of the students used for the current round
     while (currentRoundStudents.length < 4) {
         // Pick a student
         let nextStudent = getRandomStudent();
-        //console.log("Randomly picked student", nextStudent.name);
 
         // Only push the chosen student to current round array if it's name is not currently in the current round array
         if (!currentRoundStudents.find( (student) => student.name === nextStudent.name )) {
@@ -250,46 +247,44 @@ const renderResult = function() {
 		return round.userGuess !== round.name;
 	});
 
-	console.log(currentGameResult);
 	currentGameResult = currentGameResult.map( (round) => {
 		return `<div class="wrong-guesses-wrapper"><img src="${round.image}"><p>You guessed: ${round.userGuess} but the correct name is ${round.name}</p></div>`
 	} );
 
-	gameResultEl.innerHTML = `<p>Game Finished. You got ${score} out of ${currentRound} points</p>`;
+	
+
+	if (score === currentRound) {
+		gameResultEl.innerHTML = `<p>Congratulations! You got a perfect score, all ${score} correct!</p>`;
+		btnShowWrongs.classList.add('hide');
+	} else {
+		gameResultEl.innerHTML = `<p>Game Finished. You got ${score} out of ${currentRound} points</p>`;
+		btnShowWrongs.classList.remove('hide');
+	}
 
 	if (previousGameScore >= 0) {
 		if (previousGameScore > score) {
-			gameResultEl.innerHTML += `<p>You did worse(${score} points) than your previous(${previousGameScore} points) game</p>`;
+			gameResultEl.innerHTML += `<p>You did worse (${score} points) than your previous (${previousGameScore} points) game</p>`;
 		}else if (previousGameScore < score){
-			gameResultEl.innerHTML += `<p>You did better(${score} points) than your previous(${previousGameScore} points) game</p>`;
+			gameResultEl.innerHTML += `<p>You did better (${score} points) than your previous (${previousGameScore} points) game</p>`;
 		}
 	}
+
 	previousGameScore = score;
 
 	currentGameResult.forEach ( (item) => {
 		wrongGuessesEl.innerHTML += item;
 	} );
+
 	gameResultContainerEl.classList.add('show-d');
 	gameContainerEl.classList.add('hide');
 }
-
-// Event listener for the button to start new game
-btnNewGameEl.addEventListener ('click', () => {
-	
-	// Begin a new game
-	newGame();
-
-	// Begin a new round
-	newRound();
-    
-});
 
 // Event listener for the UL
 gameContainerEl.addEventListener('click', (e) => {
     
     // If the clicked target is an Li - element, start a new round
     if (e.target.tagName === 'LI') {
-        console.log("You choose: ", e.target.innerText);
+
 		currentRound++;
 		currentGameResult.push(
 		{
@@ -297,30 +292,46 @@ gameContainerEl.addEventListener('click', (e) => {
 			name: secretStudent.name,
 			userGuess: e.target.innerText
 		});
-		//console.log(currentGameResult[currentGameResult.length-1]);
-		// If the clicked Li corresponds with the image, increase the score
+		
         if (e.target.innerText === secretStudent.name) {
-            score++;
-            console.log("Correct - ", score);
-            
-        } else {
-            console.log("Wrong");
-        }
+            score++;          
+        } 
 
 		// If the current round number is the same as lenth of student array, finished the game
         if (currentRound === students.length) {
 			
-            console.log(`Game finished. You got ${score} out of ${currentRound} points`);
+            btnResetEL.classList.add('btn-new-game');
+			btnResetEL.classList.remove('btn-abort');
+			btnResetEL.innerText = "Start New Game";
 			renderResult();
 			
         } else {
             newRound();
         }
         
-    } else if (e.target.tagName === 'BUTTON') {
-		renderResult();
-	}
+    } 
     
+});
+
+btnResetEL.addEventListener('click', (e) => {
+	if (btnResetEL.classList.contains('btn-abort')) {
+		
+		btnResetEL.classList.add('btn-new-game');
+		btnResetEL.classList.remove('btn-abort');
+		btnResetEL.innerText = "Start New Game";
+		renderResult();
+	} else {
+		btnResetEL.classList.add('btn-abort');
+		btnResetEL.classList.remove('btn-new-game');
+		btnResetEL.innerText = "Give Up";
+
+		// Begin a new game
+		newGame();
+
+		// Begin a new round
+		newRound();
+	}
+	
 });
 
 btnShowWrongs.addEventListener('click', () => {
