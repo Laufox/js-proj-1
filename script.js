@@ -202,7 +202,7 @@ const newGame = function() {
 	gameResultEl.innerHTML = '';
 	wrongGuessesEl.innerHTML = '';
 	gameContainerEl.classList.remove('hide');
-	gameResultContainerEl.classList.remove('show');
+	gameResultContainerEl.classList.remove('show-d');
 }
 
 // Function to update data and DOM each round
@@ -252,7 +252,7 @@ const renderResult = function() {
 
 	console.log(currentGameResult);
 	currentGameResult = currentGameResult.map( (round) => {
-		return `<img src="${round.image}"><p>You guessed: ${round.userGuess} but the correct name is ${round.name}</p>`
+		return `<div class="wrong-guesses-wrapper"><img src="${round.image}"><p>You guessed: ${round.userGuess} but the correct name is ${round.name}</p></div>`
 	} );
 
 	gameResultEl.innerHTML = `<p>Game Finished. You got ${score} out of ${currentRound} points</p>`;
@@ -269,7 +269,7 @@ const renderResult = function() {
 	currentGameResult.forEach ( (item) => {
 		wrongGuessesEl.innerHTML += item;
 	} );
-	gameResultContainerEl.classList.add('show');
+	gameResultContainerEl.classList.add('show-d');
 	gameContainerEl.classList.add('hide');
 }
 
