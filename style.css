@@ -67,15 +67,15 @@ button {
     border: 2px solid black;
 }
 
-.btn-new-game {
+.btn-start-game {
     background-color: #315437;
 }
 
-.btn-abort {
+.btn-stop-game {
     background-color: #543137;  
 }
 
-#btn-show-wrongs {
+#btn-show-wrong-answers {
     background-color: #373154;
 }
 
@@ -85,7 +85,6 @@ main {
     display: flex;
     flex-flow: column;
     gap: 20px;
-    background-color: #eee;
 }
 
 .game-container {
@@ -98,7 +97,7 @@ main {
     align-self: center;
 }
 
-.game-result-container {
+.results-container {
     display: none;
     flex-flow: column;
     align-items: center;
@@ -111,11 +110,11 @@ main {
 }
 
 .wrong-guesses-wrapper {
-    background-color: beige;
+    background-color: rgb(255, 255, 236);
 }
 
 .wrong-guesses .wrong-guesses-wrapper:nth-child(even) {
-    background-color: cadetblue;
+    background-color: rgb(236, 255, 255);
 }
 
 .wrong-guesses p {
@@ -127,7 +126,7 @@ main {
     display: block;
 }
 
-.show-d {
+.show-f {
     display: flex;
 }
 
