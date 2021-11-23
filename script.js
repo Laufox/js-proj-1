@@ -179,10 +179,6 @@ let secretStudent;
 let currentGameResult = [];
 // Array of studentobjects that will be displayed to the user as guessable names
 let currentRoundStudents = [];
-// Round number that the user is currently on
-let currentRoundNumber = 0;
-// Current user score
-let score = 0;
 // Score of the previous game
 let previousGameScore = -1;
 
@@ -202,9 +198,7 @@ const newGame = function() {
 	currentGameStudents = [...students];
 	// Randomise student array for the new game
 	arrayShuffle(currentGameStudents);
-	// Empty variables
-    currentRoundNumber = 0;
-    score = 0;
+	// Empty current game result array
 	currentGameResult = [];
 	// Empty DOM element content
 	resultInfoEl.innerHTML = '';
@@ -230,7 +224,7 @@ const newRound = function() {
     gameContainerImgEl.setAttribute('src', secretStudent.image);
 
     // Update the DOM with info about what round the user is on 
-    gameContainerHeadingEl.innerText = `Round ${currentRoundNumber + 1} - Who is this?`;
+    gameContainerHeadingEl.innerText = `Round ${currentGameResult.length + 1} - Who is this?`;
 
     // Fill in the rest of the students used for the current round
     while (currentRoundStudents.length < 4) {
@@ -255,6 +249,13 @@ const newRound = function() {
 
 // Function to calculate and display the results after finished game
 const renderResult = function() {
+	// Setting the length of current game result array as the total number of rounds played
+	const numOfRounds = currentGameResult.length;
+	// Calculating score by length of a filtered current gam result array containing only correct answers
+	const score = currentGameResult.filter( (round) => {
+		return round.userGuess === round.name;
+	} ).length;
+
 	// Filter the game result array to only contain wrong guesses
 	currentGameResult = currentGameResult.filter( (round) => {
 		return round.userGuess !== round.name;
@@ -264,23 +265,20 @@ const renderResult = function() {
 	currentGameResult = currentGameResult.map( (round) => {
 		return `<div class="wrong-guesses-wrapper"><img src="${round.image}"><p>You guessed: ${round.userGuess} but the correct name is ${round.name}</p></div>`
 	} );
-
-	// Display all wrong guesses elements to the DOM
-	currentGameResult.forEach ( (item) => {
-		wrongGuessesEl.innerHTML += item;
-	} );
+	
+	wrongGuessesEl.innerHTML = currentGameResult.join('');
 
 	// Display different messages to the user depending on the score
-	if (currentRoundNumber === 0) {
+	if (numOfRounds === 0) {
 		resultInfoEl.innerHTML = `<p>Are you not even gonna try? No rounds played. Press the button above to start a new game.</p>`;
 		btnShowWrongAnswersEl.classList.add('hide');
 	} else if (score === 0) {
-		resultInfoEl.innerHTML = `<p>Unfortunately you did not got a single one correct. <br>Score: ${score}/${currentRoundNumber} </p>`;
-	} else if (score === currentRoundNumber) {
+		resultInfoEl.innerHTML = `<p>Unfortunately you did not got a single one correct. <br>Score: ${score}/${numOfRounds} </p>`;
+	} else if (score === numOfRounds) {
 		resultInfoEl.innerHTML = `<p>Congratulations! You got a perfect score, all ${score} correct!</p>`;
 		btnShowWrongAnswersEl.classList.add('hide');
 	} else {
-		resultInfoEl.innerHTML = `<p>Thanks for playing! You got ${score} out of ${currentRoundNumber} points.</p>`;
+		resultInfoEl.innerHTML = `<p>Thanks for playing! You got ${score} out of ${numOfRounds} points.</p>`;
 	}
 
 	// Inform the user if the score was better or worse than the previous game
@@ -305,9 +303,6 @@ gameContainerList.addEventListener('click', (e) => {
     
     // If the clicked target is an Li element, update info about the current round
     if (e.target.tagName === 'LI') {
-
-		// Increase round number
-		currentRoundNumber++;
 		// Add information about the correct student and what the user guessed, to the current game result array
 		currentGameResult.push(
 		{
@@ -316,14 +311,9 @@ gameContainerList.addEventListener('click', (e) => {
 			userGuess: e.target.innerText
 		}
 		);
-		
-		// If the guess was correct, increase the score
-        if (e.target.innerText === secretStudent.name) {
-            score++;          
-        } 
 
 		// If the current round number is the same as lenth of student array, finish the game
-        if (currentRoundNumber === students.length) {
+        if (currentGameResult.length === students.length) {
 			// Change button text and style
             btnStopStart.classList.add('btn-start-game');
 			btnStopStart.classList.remove('btn-stop-game');
@@ -334,8 +324,7 @@ gameContainerList.addEventListener('click', (e) => {
         } else {
 			// Start a new round
             newRound();
-        }
-        
+        }    
     }
     
 });

@@ -25,13 +25,13 @@ ul {
     list-style-type: none;
     display: flex;
     flex-flow: column;
-    gap: 5px;
+    gap: 10px;
 }
 
 li {
-    padding: 8px;
+    padding: 12px;
     background-color: rgb(150, 216, 219);
-    font-size: 1.3rem;
+    font-size: 1.4rem;
     cursor: pointer;
     border: 1px solid black;
 }
@@ -44,7 +44,6 @@ img {
     width: 500px;
     height: auto;
     max-width: 100%;
-    border: 1px solid black;
 }
 
 p {
@@ -58,7 +57,8 @@ p {
 button {
     padding: 10px;
     cursor: pointer;
-    min-width: 280px;
+    width: 280px;
+    max-width: 100%;
     border-radius: 10px;
     color: white;
     border: 2px solid white;
@@ -95,6 +95,7 @@ main {
 
 .game-container img {
     align-self: center;
+    border: 1px solid black;
 }
 
 .results-container {
@@ -111,6 +112,8 @@ main {
 
 .wrong-guesses-wrapper {
     background-color: rgb(255, 255, 236);
+    margin-top: 20px;
+    border: 1px solid black;
 }
 
 .wrong-guesses .wrong-guesses-wrapper:nth-child(even) {
@@ -119,7 +122,11 @@ main {
 
 .wrong-guesses p {
     margin: 0;
-    padding: 0 10px 20px;
+    padding: 0 10px 10px;
+}
+
+.wrong-guesses img {
+    border-bottom: 1px solid black;
 }
 
 .show {
