@@ -1,13 +1,16 @@
+/* Default settings for all elements */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
+/* Always show the scrollbar in the browser */
 html {
     overflow-y: scroll;
 }
 
+/* Styling the headers */
 h1, h2 {
     text-align: center;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -21,31 +24,14 @@ h2 {
     font-size: 1.3em;
 }
 
-ul {
-    list-style-type: none;
-    display: flex;
-    flex-flow: column;
-    gap: 10px;
-}
-
-li {
-    padding: 12px;
-    background-color: rgb(150, 216, 219);
-    font-size: 1.4rem;
-    cursor: pointer;
-    border: 1px solid black;
-}
-
-li:hover {
-    background-color: rgba(150, 216, 219, 0.3);
-}
-
+/* Making sure the images behaves responsibly */
 img {
     width: 500px;
     height: auto;
     max-width: 100%;
 }
 
+/* Styling all paragraphs */
 p {
     padding: 5px;
     line-height: 1.3;
@@ -54,6 +40,7 @@ p {
     align-self: center;
 }
 
+/* Styling generic buttons and changing background colors the different type of buttons to be displayed */
 button {
     padding: 10px;
     cursor: pointer;
@@ -79,6 +66,12 @@ button {
     background-color: #373154;
 }
 
+button:hover {
+    opacity: 0.9;
+    text-decoration: underline;
+}
+
+/* Styling the main element */
 main {
     min-height: 100vh;
     padding: 3vh 3vw;
@@ -87,6 +80,7 @@ main {
     gap: 20px;
 }
 
+/* Styling the container element for displaying a game, aswell as its children */
 .game-container {
     display: flex;
     flex-flow: column;
@@ -98,6 +92,27 @@ main {
     border: 1px solid black;
 }
 
+/* Styling the list container and the list items */
+ul {
+    list-style-type: none;
+    display: flex;
+    flex-flow: column;
+    gap: 10px;
+}
+
+li {
+    padding: 12px;
+    background-color: rgb(150, 216, 219);
+    font-size: 1.4rem;
+    cursor: pointer;
+    border: 1px solid black;
+}
+
+li:hover {
+    background-color: rgba(150, 216, 219, 0.3);
+}
+
+/* Styling the container element for displaying the results, aswell as its children */
 .results-container {
     display: none;
     flex-flow: column;
@@ -129,6 +144,7 @@ main {
     border-bottom: 1px solid black;
 }
 
+/* Set of classes to apply to elements depending on their current state */
 .show {
     display: block;
 }
@@ -141,8 +157,7 @@ main {
     display: none;
 }
 
-/* Image container max width of 500 px?? */
-
+/* Style rules to apply on screen with a minimun width of 550 pixels */
 @media screen and (min-width: 550px) {
     main {
         width: 90%;
@@ -150,6 +165,7 @@ main {
     }
 }
 
+/* Style rules to apply on screen with a minimun width of 800 pixels */
 @media screen and (min-width: 800px) {
     main {
         width: 80%;
@@ -165,6 +181,7 @@ main {
     }
 }
 
+/* Style rules to apply on screen with a minimun width of 1000 pixels */
 @media screen and (min-width: 1000px) {
     main {
         max-width: 800px;

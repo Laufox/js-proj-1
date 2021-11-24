@@ -203,7 +203,7 @@ const newGame = function() {
 	// Empty DOM element content
 	resultInfoEl.innerHTML = '';
 	wrongGuessesEl.innerHTML = '';
-	// Show the DOM container element, and hide the DOM result element
+	// Show the DOM game container element, and hide the DOM result element
 	gameContainerEl.classList.remove('hide');
 	resultsContainerEl.classList.remove('show-f');
 	btnShowWrongAnswersEl.classList.remove('hide');
@@ -231,7 +231,7 @@ const newRound = function() {
         // Get a random student object from the students array
         let nextPossibleStudent = students[Math.floor(Math.random() * students.length)];
 
-        // Only push the chosen student to current round array if it's name is not currently in the current round array
+        // Only push the chosen student to current round array if the name is not already in the current round array
         if (!currentRoundStudents.find( (student) => student.name === nextPossibleStudent.name )) {
             currentRoundStudents.push(nextPossibleStudent);
         }
@@ -266,6 +266,7 @@ const renderResult = function() {
 		return `<div class="wrong-guesses-wrapper"><img src="${round.image}"><p>You guessed: ${round.userGuess} but the correct name is ${round.name}</p></div>`
 	} );
 	
+	// Displaying the result array to DOM a single string
 	wrongGuessesEl.innerHTML = currentGameResult.join('');
 
 	// Display different messages to the user depending on the score
@@ -286,7 +287,7 @@ const renderResult = function() {
 		if (previousGameScore > score) {
 			resultInfoEl.innerHTML += `<p>You got a lower score (${score} points) than your previous game (${previousGameScore} points).</p>`;
 		}else if (previousGameScore < score){
-			resultInfoEl.innerHTML += `<p>You got a better score (${score} points) than your previous game (${previousGameScore} points).</p>`;
+			resultInfoEl.innerHTML += `<p>You got a higher score (${score} points) than your previous game (${previousGameScore} points).</p>`;
 		}
 	}
 
@@ -336,9 +337,9 @@ gameContainerImgEl.addEventListener('contextmenu', (e) => {
 
 // Event listener for clicks on the start new game & give up button
 btnStopStart.addEventListener('click', () => {
-	// If the button currently has the class "btn-abort"
+	// If the button currently has the class "btn-stop-game"
 	if (btnStopStart.classList.contains('btn-stop-game')) {
-		// Change button text and style to fit the "start new game" style
+		// Change button text and style to fit the "start game" style
 		btnStopStart.classList.add('btn-start-game');
 		btnStopStart.classList.remove('btn-stop-game');
 		btnStopStart.innerText = "Start New Game";
