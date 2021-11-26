@@ -177,23 +177,24 @@ let currentGameStudents = [];
 let secretStudent;
 // Array that holds information about every round the user has played during a game
 let currentGameResult = [];
-// Array of studentobjects that will be displayed to the user as guessable names
-let currentRoundStudents = [];
-// Score of the previous game
-let previousGameScore = -1;
+// Highscore, defined as negative one before any game has been played
+let highscore = -1;
 
 // Function that shuffles elements of an array by random
 const arrayShuffle = function(arr) {
+
      for (let i = arr.length -1; i > 0; i--) {
        let j = Math.floor(Math.random() * (i + 1));
        let temp = arr[i];
        arr[i] = arr[j];
        arr[j] = temp;
-     }    
- }
+     }
+
+}
 
 // Function to reset data and begin a new game
 const newGame = function() {
+
 	// Get a copy of students array for the new game
 	currentGameStudents = [...students];
 	// Randomise student array for the new game
@@ -208,12 +209,15 @@ const newGame = function() {
 	resultsContainerEl.classList.remove('show-f');
 	btnShowWrongAnswersEl.classList.remove('hide');
 	wrongGuessesEl.classList.remove('show');
+
 }
 
 // Function to update data and DOM each round
 const newRound = function() {
+
     // Clean up previous round
-    currentRoundStudents = [];
+	// Array of studentobjects that will be displayed to the user as guessable names
+    let currentRoundStudents = [];
     gameContainerList.innerHTML = '';
 
     // Remove the last student object in the current game array, and put it in the current round array
@@ -249,6 +253,7 @@ const newRound = function() {
 
 // Function to calculate and display the results after finished game
 const renderResult = function() {
+
 	// Setting the length of current game result array as the total number of rounds played
 	const numOfRounds = currentGameResult.length;
 	// Calculating score by length of a filtered current gam result array containing only correct answers
@@ -263,7 +268,7 @@ const renderResult = function() {
 
 	// Manipulate the game result array so that each elemnt is an html snippet to be sent to DOM
 	currentGameResult = currentGameResult.map( (round) => {
-		return `<div class="wrong-guesses-wrapper"><img src="${round.image}"><p>You guessed: ${round.userGuess} but the correct name is ${round.name}</p></div>`
+		return `<div class="wrong-guesses-wrapper"><img src="${round.image}"><p>You guessed: ${round.userGuess},<br>But the correct name is: ${round.name}</p></div>`
 	} );
 	
 	// Displaying the result array to DOM a single string
@@ -282,21 +287,18 @@ const renderResult = function() {
 		resultInfoEl.innerHTML = `<p>Thanks for playing! You got ${score} out of ${numOfRounds} points.</p>`;
 	}
 
-	// Inform the user if the score was better or worse than the previous game
-	if (previousGameScore >= 0) {
-		if (previousGameScore > score) {
-			resultInfoEl.innerHTML += `<p>You got a lower score (${score} points) than your previous game (${previousGameScore} points).</p>`;
-		}else if (previousGameScore < score){
-			resultInfoEl.innerHTML += `<p>You got a higher score (${score} points) than your previous game (${previousGameScore} points).</p>`;
-		}
+	// If the user got a new best score, update and inform user
+	if (highscore < 0) {
+		highscore = score;
+	}else if (score > highscore) {
+		resultInfoEl.innerHTML += `<p>New Highscore! Previous highscore: ${highscore}</p>`;
+		highscore = score;
 	}
-
-	// Set this round score as previous score for future games
-	previousGameScore = score;
 	
 	// Show the html container for the result, and hide the container for the game
 	resultsContainerEl.classList.add('show-f');
 	gameContainerEl.classList.add('hide');
+
 }
 
 // Event listener for the UL element
@@ -332,11 +334,14 @@ gameContainerList.addEventListener('click', (e) => {
 
 // Prevent the user from right-clicking on an image to get the name
 gameContainerImgEl.addEventListener('contextmenu', (e) => {
+
 	e.preventDefault();
+
 });
 
 // Event listener for clicks on the start new game & give up button
 btnStopStart.addEventListener('click', () => {
+
 	// If the button currently has the class "btn-stop-game"
 	if (btnStopStart.classList.contains('btn-stop-game')) {
 		// Change button text and style to fit the "start game" style
@@ -357,14 +362,16 @@ btnStopStart.addEventListener('click', () => {
 		// Begin a new round
 		newRound();
 	}
-	
+
 });
 
 // Eventlistener for the button hiding info about wrong guesses
 btnShowWrongAnswersEl.addEventListener('click', () => {
+
 	// If the container for wrong guesses does not have the "show" class, add it
 	// Otherwise, remove it
 	wrongGuessesEl.classList.toggle('show');
+
 });
 
 // Begin a new game
